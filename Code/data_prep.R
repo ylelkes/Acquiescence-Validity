@@ -114,7 +114,6 @@ with(anes2012,cor(data.frame(efficacy4stdpre,efficacy3stdpre,efficacy2stdpre,eff
 ########## Target Variables
 ############# Political Activities
 a <- car::recode(as.numeric(anes2012$dhsinvolv_march),"8=1;9=0;else=NA")
-b <- car::recode(as.numeric(anes2012$dhsinvolv_board),"8=1;9=0;else=NA")
 c <- car::recode(as.numeric(anes2012$dhsinvolv_netpetition),"8=1;9=0;else=NA")
 d <- car::recode(as.numeric(anes2012$dhsinvolv_petition),"8=1;9=0;else=NA")
 e <- car::recode(as.numeric(anes2012$dhsinvolv_relig),"8=1;9=0;else=NA")
