@@ -1,20 +1,22 @@
 ## Load Data
+source("Code/utility functions.R")
 anes2012 <- foreign::read.spss("Data/anes_timeseries_2012.sav",to.data.frame=T)
 anes2012$oldnew <- NA
 anes2012$oldnew[as.numeric(anes2012$effic_complicstd)!=6]='Old'
 anes2012$oldnew[as.numeric(anes2012$effic_complicstd)==6]='New'
 anes2012$oldnew <- as.factor(anes2012$oldnew)
 
-## Function to recode values to zero1
-zero1 <- function(x, minx=NA, maxx=NA){
-  res <- NA
-  if(is.na(minx)) res <- (x - min(x,na.rm=T))/(max(x,na.rm=T) -min(x,na.rm=T))
-  if(!is.na(minx)) res <- (x - minx)/(maxx -minx)
-  res
-}
 
 ########## Criterion Variables
 #########Efficacy Pre
+table(anes2012$effic_complicstd)
+table(anes2012$effic_complicrev)
+
+table(anes2012$effic_undstd)
+table(anes2012$effic_undrev)
+
+table(anes2012$effic_saystd)
+table(anes2012$effic_sayrev)
 
 anes2012$efficacy1stdpre <- as.numeric(anes2012$effic_complicstd)
 anes2012$efficacy1stdpre <- zero1(car::recode(anes2012$efficacy1stdpre,"1:6=NA"))
@@ -114,17 +116,17 @@ with(anes2012,cor(data.frame(efficacy4stdpre,efficacy3stdpre,efficacy2stdpre,eff
 ########## Target Variables
 ############# Political Activities
 a <- car::recode(as.numeric(anes2012$dhsinvolv_march),"8=1;9=0;else=NA")
-c <- car::recode(as.numeric(anes2012$dhsinvolv_netpetition),"8=1;9=0;else=NA")
-d <- car::recode(as.numeric(anes2012$dhsinvolv_petition),"8=1;9=0;else=NA")
-e <- car::recode(as.numeric(anes2012$dhsinvolv_relig),"8=1;9=0;else=NA")
-f <-  car::recode(as.numeric(anes2012$dhsinvolv_org),"8=1;9=0;else=NA")
-g <-  car::recode(as.numeric(anes2012$dhsinvolv_call),"8=1;9=0;else=NA")
-h <-  car::recode(as.numeric(anes2012$dhsinvolv_message),"8=1;9=0;else=NA")
-i <-  car::recode(as.numeric(anes2012$dhsinvolv_letter),"8=1;9=0;else=NA")
-j <-  car::recode(as.numeric(anes2012$dhsinvolv_contact1),"8=1;9=0;else=NA")
+b <- car::recode(as.numeric(anes2012$dhsinvolv_netpetition),"8=1;9=0;else=NA")
+c <- car::recode(as.numeric(anes2012$dhsinvolv_petition),"8=1;9=0;else=NA")
+d <- car::recode(as.numeric(anes2012$dhsinvolv_relig),"8=1;9=0;else=NA")
+e <-  car::recode(as.numeric(anes2012$dhsinvolv_org),"8=1;9=0;else=NA")
+f <-  car::recode(as.numeric(anes2012$dhsinvolv_call),"8=1;9=0;else=NA")
+g <-  car::recode(as.numeric(anes2012$dhsinvolv_message),"8=1;9=0;else=NA")
+h <-  car::recode(as.numeric(anes2012$dhsinvolv_letter),"8=1;9=0;else=NA")
+i <-  car::recode(as.numeric(anes2012$dhsinvolv_contact1),"8=1;9=0;else=NA")
 cor(data.frame(a,b,c,d,e,f,g,h,i,j),use="pairwise.complete.obs")
-anes2012$polactivity <- rowSums(data.frame(a,b,c,d,e,f,g,h,i,j))
-
+anes2012$polactivity <- rowSums(data.frame(a,b,c,d,e,f,g,h,i))
+b
 ##percent chance of voting
 anes2012$pctchance <- NA
 anes2012$pctchance[anes2012$likelypct_whatpct1==-1]=anes2012$pctlikely_whatpct2[anes2012$likelypct_whatpct1==-1]
@@ -159,6 +161,7 @@ quantile(anes2012$wordsumz1,c(.25,.75))
 anes2012$wordsumtri <- car::recode(anes2012$wordsumz1,"-5:-.62='Lower';.65:5='Upper';else=NA",as.factor=T)
 table(anes2012$wordsumtri)
 anes2012lowiq <- subset(anes2012,wordsumtri=='Lower')
+anes2012hiiq <- subset(anes2012,wordsumtri=='Upper')
 
 ## agreeableness
 anes2012$agreeableness <- rowMeans(data.frame(zero1(car::recode(as.numeric(anes2012$tipi_crit),"1:7=NA")),zero1(car::recode(as.numeric(anes2012$tipi_warm),"1:7=NA"))),na.rm=T)
@@ -169,3 +172,4 @@ anes2012agree <- subset(anes2012,ad=='A')
 
 ## mode
 anes2012internet <- subset(anes2012,as.numeric(mode)==2)
+anes2012internet <- subset(anes2012,as.numeric(mode)==1)

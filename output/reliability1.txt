@@ -1,5 +1,5 @@
 % latex table generated in R 3.0.2 by xtable 1.7-1 package
-% Thu Jan 16 13:56:58 2014
+% Fri Jan 17 14:09:09 2014
 \begin{table}[ht]
 \centering
 \caption{Test-Retest Reliability Estimates for Standard Efficacy Item and Revised Items} 
